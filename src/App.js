@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { API, graphqlOperation } from "aws-amplify";
+import { useState } from "react";
+import { createUser } from "./graphql/mutations";
 
 function App() {
+  const [name, setName] = useState("");
+
+  const createUser_ = async e => {
+    let user = { name: name };
+    await API.graphql(graphqlOperation(createUser, { input: user }));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <button onClick={e => createUser_(e)}>Create User</button>
     </div>
   );
 }
